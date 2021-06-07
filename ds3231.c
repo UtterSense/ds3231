@@ -36,12 +36,15 @@ int res;
 int fd;
 
 //Flag for logging:
-bool logging = true;
+//bool logging = true;
 
+int done = 0;
+int timer_int = 1;
+bool timer_flg = false;
 
 
 //NB: This handler is working for the CTL-C keyboard signal
-void ctrl_c_handler(int n, siginfo_t *info,void *unused)
+static void ctrl_c_handler(int n, siginfo_t *info,void *unused)
 {
    if(n == SIGINT) //Check it is the right user ID
    {
@@ -130,11 +133,11 @@ int init_dev(void)
    }   
    else
    {
-      printf("Signal handler for SIGINT set up OK!\n");
+      //printf("Signal handler for SIGINT set up OK!\n");
    }
    
    
-   LOGI("Opening the ds3231 device driver\n");
+   //LOGI("Opening the ds3231 device driver\n");
 		
    //Open driver:
    fd = open("/dev/ds3231", O_RDWR);             // Open the device with read/write access
@@ -146,7 +149,7 @@ int init_dev(void)
 				
 		return errno;
    }
-   LOGI("Opened device driver OK\n");
+   //LOGI("Opened device driver OK\n");
   	
 	
    return 0;
@@ -299,6 +302,22 @@ char* get_second()
    read_data("se");
    return receive;
 }  
+
+
+int32_t getHMSTimestamp()
+{
+	int32_t ts_hr,ts_min,ts_sec;
+	//Return the total timestamp (secs) for hrs/mins/secs
+	read_data("ho");
+   ts_hr =  60*60*atoi(receive);
+   read_data("mi");
+   ts_min =  60*atoi(receive);
+   read_data("se");
+   ts_sec =  atoi(receive);
+      
+	return ts_hr+ts_min+ts_sec; 
+	
+}//getHMSTimestamp	
 
 
 char* get_temp_upper()

@@ -11,7 +11,7 @@
 
 #include <stdbool.h>
 
-#define ANDROID_APP      //Add this define if we are running C Code as part of Android App 
+//#define ANDROID_APP      //Add this define if we are running C Code as part of Android App 
                          //to facilitate adb logging          
 #ifdef ANDROID_APP
  #include <android/log.h>
@@ -42,14 +42,12 @@ struct Temperature {
 struct Temperature temp;
 
 //Timer Attributes:
-int timer_int = 1; //Secs
-bool timer_flg = false;
+extern int timer_int; //Secs
+extern bool timer_flg; 
 
-char* m_DateTimeStr = "";
-char* m_TempStr = "";
 
 //Program control flag:
-int done = 0;
+extern int done;
 	
 
 void ds3231_test(void);
@@ -68,6 +66,7 @@ char* get_day(void);
 char* get_hour(void);
 char* get_minute(void);
 char* get_second(void);
+int32_t getHMSTimestamp(void);
 void set_DateTime(void);
 void set_year(char d1, char d2);
 void set_month(char d1, char d2);
